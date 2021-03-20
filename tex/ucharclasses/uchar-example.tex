@@ -1,0 +1,33 @@
+\documentclass[12pt]{article}
+
+\usepackage{fontspec}
+  % Set a typeface for each block you intend to use in the document.
+  \newfontfamily{\defaultfont}{Brill}
+  \newfontfamily{\cjkfont}{Kai}
+  \newfontfamily{\hierfont}{Noto Sans Egyptian Hieroglyphs}
+
+% As package options, list the names of the Unicode blocks you will use in the document.
+\usepackage[CJK, Latin, EgyptianHieroglyphs]{ucharclasses}
+  % The following sets the default font transition, meaning that characters
+  % not in any of the blocks specified in the package options will be rendered
+  % with that typeface.
+  \setDefaultTransitions{\defaultfont}{}
+  % The package offers a few Unicode block "bundles" for quicker font specification.
+  % Here, we're using the Latin bundle and the CJK bundle.
+  \setTransitionsForLatin{\defaultfont}{}
+  \setTransitionsForCJK{\cjkfont}{}
+  % To set the typeface for a specific Unicode Block, do:
+  %    \setTransitionTo{<block-name>}{<font-command>}
+  \setTransitionTo{EgyptianHieroglyphs}{\hierfont}
+
+\begin{document}
+
+This is roman text, while this 我的母 is Chinese!
+
+And this, oh friend, is hieroglyphic:
+
+𓁚𓂀𓅓
+
+Oops! That was an Ancient Egyptian curse, and you just cast it upon yourself by looking at it!
+
+\end{document}
