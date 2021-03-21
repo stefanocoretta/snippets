@@ -25,18 +25,43 @@
 #' ae = load_emuDB(demoDatabaseDir)
 #' 
 #' query_hier(ae, "Phonetic == S", c("Word", "Syllable"))
-query_hier <- function(emuDBhandle, query, labels_from = NULL, ...) {
+query_hier <- function(emuDBhandle, query, labels_from = NULL, labels_times = FALSE, get_meta = FALSE, ...) {
   que <- emuR::query(emuDBhandle, query, ...)
+  
+  level_name <- que$level[1]
   
   if (!is.null(labels_from)) {
     que_labs <- que
     for (level in labels_from) {
-      reque <- emuR::requery_hier(emuDBhandle, que, level, calcTimes = F) %>%
-        dplyr::select(!!rlang::sym(level) := labels)
+      if (labels_times) {
+        reque <- emuR::requery_hier(emuDBhandle, que, level, calcTimes = T) %>%
+          dplyr::select(
+            !!rlang::sym(level) := labels,
+            !!rlang::sym(paste0(level, "_start")) := start,
+            !!rlang::sym(paste0(level, "_end")) := end
+          )
+      } else {
+        reque <- emuR::requery_hier(emuDBhandle, que, level, calcTimes = F) %>%
+          dplyr::select(!!rlang::sym(level) := labels)
+      }
       que_labs <- dplyr::bind_cols(que_labs, reque)
     }
-    return(que_labs)
-  } else {
-    return(que)
+    que <- que_labs
   }
+  
+  que <- que %>%
+    rename(
+      !!rlang::sym(level_name) := labels,
+      !!rlang::sym(paste0(level_name, "_start")) := start,
+      !!rlang::sym(paste0(level_name, "_end")) := end
+    ) %>%
+    select(-level) %>%
+    relocate(session, bundle, attribute, type)
+  
+  if (!get_meta) {
+    que <- que %>%
+      select(-db_uuid, -matches("_idx?$"), -starts_with("sample_"))
+  }
+  
+  return(que)
 }
