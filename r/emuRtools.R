@@ -8,6 +8,9 @@
 #' @param labels_from Names of levels whose labels should be returned. The level
 #'   returned by the query expression is returned by default in the column
 #'   `labels`.
+#' @param labels_times If `TRUE`, get start and end time of all levels (default
+#'   is `FALSE`).
+#' @param get_meta If `TRUE`, get emuR metadata (default is `FALSE`).
 #' @param ... Further arguments passed to \link[emuR]{query}.
 #'
 #' @return A tibble.
@@ -16,14 +19,14 @@
 #' @examples
 #' library(tidyverse)
 #' library(emuR)
-#' 
+#'
 #' create_emuRdemoData(dir = tempdir())
 #' # build base path to demo emuDB
 #' demoDatabaseDir = file.path(tempdir(), "emuR_demoData", "ae_emuDB")
-#' 
+#'
 #' # load demo emuDB
 #' ae = load_emuDB(demoDatabaseDir)
-#' 
+#'
 #' query_hier(ae, "Phonetic == S", c("Word", "Syllable"))
 query_hier <- function(emuDBhandle, query, labels_from = NULL, labels_times = FALSE, get_meta = FALSE, ...) {
   que <- emuR::query(emuDBhandle, query, ...)
