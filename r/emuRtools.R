@@ -14,6 +14,9 @@
 #' @param ... Further arguments passed to \link[emuR]{query}.
 #'
 #' @return A tibble.
+#' @importFrom magrittr %>%
+#' @name %>%
+#' @rdname pipe
 #' @export
 #'
 #' @examples
